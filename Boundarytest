@@ -1,0 +1,57 @@
+Logic Point A — Player Movement Inside the Vastella Ship
+
+Player movement matters because the ship contains narrow hallways, restricted zones, and dangerous drops (such as falling from the cryostasis pod).
+
+Boundary Cases
+Boundary Input	Why It’s a Boundary
+Tile/coordinate less than 0	Player tries to move off-grid or into walls.
+Tile/coordinate equal to max grid size	Player is at very edge of map.
+Movement into a restricted security-only zone	Unexpected or illegal movement.
+Test Data
+Boundary Input	Test Data Example
+Below grid minimum	Player attempts to move to (-1, 12)
+At grid maximum	Player stands at (49, 0) on a 0–49 grid
+Entering restricted zone	Moving into Security Room A without authorization
+Expected Outcomes
+Boundary Input	Test Data	Expected Outcome
+<0 movement	(-1, 12)	Game blocks move; displays warning; no crash.
+Max boundary	(49, 0)	Player can stand and move along the edge normally.
+Restricted zone	Moving into Security Room A	Trigger security suspicion or confrontation; possibly game over.
+Logic Point B — Player Health & Injury System
+
+Health determines survival during fights with security, bullies, or augment malfunctions.
+
+Boundary Cases
+Boundary Input	Why It’s a Boundary
+HP = -1	Health below zero (should never happen).
+HP = 0	Exact death threshold.
+HP above max (e.g., 101/100)	Impossible healing or logic bug.
+Test Data
+Boundary Input	Test Data Example
+HP < 0	HP set to -1 after cybernetic malfunction
+HP = 0	HP reaches 0 after fight with security
+HP > max	Healing inject gives +30, pushing HP to 120
+Expected Outcomes
+Boundary Input	Test Data	Expected Outcome
+Negative HP	-1 HP	Game clamps to 0; triggers death/game over.
+Zero HP	0 HP	Death/game over screen appropriate to story branch.
+Over max HP	120/100 HP	Clamp to max HP; no overflow; no stat corruption.
+Logic Point C — Codex Inventory & Item Interaction
+
+Codex and inventory are essential for clues, augment upgrades, and story interactions.
+
+Boundary Cases
+Boundary Input	Why It’s a Boundary
+Inventory = 0 items	Player starts with nothing.
+Inventory = maximum slots (full)	Cannot pick up more items.
+Wrong item type	Player interacts with “non-pickup” object.
+Test Data
+Boundary Input	Test Data Example
+Empty inventory	Player tries to use an item but inventory = []
+Full inventory	20/20 items; tries to pick up Augment Module
+Wrong item type	Player attempts to add Cryo Pod as a codex entry
+Expected Outcomes
+Boundary Input	Test Data	Expected Outcome
+Empty inventory use	Use item with []	Game says “No item to use”; no crash.
+Inventory full	Pick up Augment Module	“Inventory Full” message; item remains on ground.
+Wrong item type	Cryo Pod → codex	Game plays error sound; disallows; does not corrupt inventory.
